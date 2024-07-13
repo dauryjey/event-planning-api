@@ -1,0 +1,14 @@
+version: latest
+services:
+  db:
+    image: postgres
+    restart: always
+    container_name: eventdb
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: eventdb
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
