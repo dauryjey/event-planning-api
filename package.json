@@ -4,6 +4,10 @@
   "type": "module",
   "scripts": {
     "build": "npx tsc",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down -d",
+    "db:mig:run": "npx prisma migrate dev",
+    "db:mig:create": "npx prisma migrate dev --name",
     "dev": "tsx watch src",
     "start": "node dist/index.js"
   },
@@ -15,6 +19,7 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
+    "@prisma/client": "^5.16.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "cors": "^2.8.5",
