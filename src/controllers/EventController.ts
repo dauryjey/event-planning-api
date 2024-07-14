@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { Event } from "@prisma/client"
-import EventQueries from "../queries/eventQueries"
+import EventQueries from "../queries/EventQueries"
 
 async function retrieveEvents(_: Request, res: Response): Promise<void> {
   try {
