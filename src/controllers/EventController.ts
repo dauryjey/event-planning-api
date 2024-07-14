@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { Event } from "@prisma/client"
 import EventQueries from "../queries/EventQueries"
+import { internalError } from "../utils/internalError"
 
 async function retrieveEvents(_: Request, res: Response): Promise<void> {
   try {
@@ -15,7 +16,30 @@ async function retrieveEvents(_: Request, res: Response): Promise<void> {
     return
   } catch (error) {
     console.log(error)
-    res.status(500).json({ message: "Internal error. Please try again." })
+    internalError(res, error)
+    return
+  }
+}
+
+async function getEventById(req: Request, res: Response): Promise<void> {
+  const { id } = req.params
+
+  if (!id) {
+    res.status(400).json({ message: "ID Required!" })
+    return
+  }
+
+  try {
+    const event = await EventQueries.getEventById(id)
+
+    if (!event) {
+      res.status(204)
+      return
+    }
+
+    res.status(200).json(event)
+  } catch (error) {
+    internalError(res, error)
     return
   }
 }
@@ -30,7 +54,7 @@ async function createEvent(req: Request, res: Response): Promise<void> {
     return
   } catch (error) {
     console.log(error)
-    res.status(500).json({ message: "Internal error. Please try again." })
+    internalError(res, error)
     return
   }
 }
@@ -52,13 +76,13 @@ async function updateEvent(req: Request, res: Response): Promise<void> {
 
   try {
     const updatedEvent = await EventQueries.updateEvent(id, req.body)
-
+    console.log(updatedEvent)
     res.status(200).json(updatedEvent)
     return
   } catch (error) {
     console.log(error)
 
-    res.status(500).json({ message: "Internal error. Please try again." })
+    internalError(res, error)
     return
   }
 }
@@ -79,13 +103,14 @@ async function deleteEvent(req: Request, res: Response): Promise<void> {
   } catch (error) {
     console.log(error)
 
-    res.status(500).json({ message: "Internal error. Please try again." })
+    internalError(res, error)
     return
   }
 }
 
 export default {
   retrieveEvents,
+  getEventById,
   createEvent,
   deleteEvent,
   updateEvent,
